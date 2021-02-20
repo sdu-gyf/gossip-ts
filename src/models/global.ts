@@ -441,10 +441,10 @@ export default {
     },
     toggleShow(state: StateType, action: ActionType) {
       const { key } = action.payload
-      state.show && (state.show[key] = state.show[key] ? 0 : 1)
+      state.show && (state.show[key!] = state.show[key!] ? 0 : 1)
       const g: KeyType[] = ['variable', 'attr', 'structure']
       if (
-        g.indexOf(key) === -1 ||
+        g.indexOf(key!) === -1 ||
         g.some(d => {
           state.show && state.show[d]
         })

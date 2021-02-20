@@ -1,4 +1,4 @@
-import { AttributesType, LanguageType } from './types'
+import { AttributesType, IdeaType, LanguageType, ComponentType, LocalesType } from './types'
 
 const exampleURL = 'https://i.loli.net/2020/03/18/g21ro4tTCAQ3nXO.jpg'
 
@@ -14,12 +14,11 @@ const defaultValues = {
   }`,
 }
 
-function createIdea(id: number, type: any) {
+function createIdea(id: number, type: IdeaType) {
   return {
     id,
     type,
-    // 这里 js 可以 ts 不可以
-    // value: defaultValues[type],
+    value: defaultValues[type],
   }
 }
 
@@ -82,7 +81,13 @@ function createCanvas(id: number, value: string = defaultValues.canvas, attrs: A
   }
 }
 
-function createSlide(id: number, value: any, lang: LanguageType, locales: any, content = locales.NEW_POINT_INFO[lang]) {
+function createSlide(
+  id: number,
+  value: any,
+  lang: LanguageType,
+  locales: LocalesType,
+  content = locales.NEW_POINT_INFO[lang],
+): ComponentType {
   return createPanel(id, 'column', { span: [1, 2], backgroundColor: '$1', padding: '$6' }, [
     createText('text' + id, value, {
       isTitle: true,
@@ -98,7 +103,7 @@ function createSlide(id: number, value: any, lang: LanguageType, locales: any, c
   ])
 }
 
-function createFile(lang: LanguageType, locales: any) {
+function createFile(lang: LanguageType, locales: LocalesType) {
   const name = locales.NEW_FILE_NAME[lang]
   return {
     fileName: 'new',
