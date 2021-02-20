@@ -249,3 +249,45 @@ export type ComponentType = {
   attrs?: AttributesType
   children?: any
 }
+
+export type ComponentStateType = {
+  components?: ComponentType[]
+  ideas?: any
+  selectedComponentId?: number | string
+  selectedIdea?: number
+  selectedId?: number
+  selectedAttributeId?: number
+  _children?: any
+  children?: any
+  lang?: LanguageType
+  locales?: LocalesType
+  attributeVars?: any
+  structure: {
+    id?: number
+    name?: string
+    children?: {
+      id?: number
+    }
+    _children?: {
+      id?: number
+    }
+  }
+}
+
+export type ComponentActionType = {
+  payload: {
+    rootId?: number
+    id?: number
+    father?: any
+    type?: IdeaType | string
+    method?: any
+    brother?: any
+    before?: any
+    a?: ComponentType
+    b?: ComponentType
+    root?: any
+    value?: any
+    cmpId?: number
+    key?: number | string
+  }
+}
