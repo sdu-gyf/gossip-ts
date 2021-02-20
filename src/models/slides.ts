@@ -481,6 +481,9 @@ export default {
         image: createImage(id, '', {}),
         canvas: createCanvas(id, '', {}),
         panel: createPanel(id, 'column', {}, []),
+        // 实际上下面两个只是防止 mp[type] 报错，并没有实际作用
+        color: createText(id, locales?.SAY_TEXT[lang!], { isTitle: false }),
+        number: createText(id, locales?.SAY_TEXT[lang!], { isTitle: false }),
       }
 
       const cmp = mp[type!]

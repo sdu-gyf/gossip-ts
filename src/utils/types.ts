@@ -279,7 +279,7 @@ export type ComponentActionType = {
     rootId?: number
     id?: number
     father?: any
-    type?: IdeaType | string
+    type?: IdeaType | 'panel' | 'number' | 'color'
     method?: any
     brother?: any
     before?: any
