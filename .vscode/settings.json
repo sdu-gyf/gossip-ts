@@ -1,6 +1,10 @@
 {
     "cSpell.words": [
+        "antd",
         "cmps",
+        "flowtype",
+        "immer",
+        "precommit",
         "prettierrc"
     ]
 }

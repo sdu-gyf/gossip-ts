@@ -1,4 +1,13 @@
-import { ActionType, PutState, StateType, KeyType } from '@/utils/types'
+import {
+  ActionType,
+  PutState,
+  StateType,
+  KeyType,
+  LanguageType,
+  LocalesType,
+} from '@/utils/types'
+import { Effect } from 'dva'
+
 function getHelp() {
   try {
     const help = localStorage.getItem('help')
@@ -8,7 +17,41 @@ function getHelp() {
   }
 }
 
-export default {
+export interface ModelState {
+  dragId: number
+  enterId: number
+  hoveredId: number
+  scale: number
+  help: any
+  show: {
+    idea: number
+    structure: number
+    attr: number
+    variable: number
+  }
+  lang: LanguageType
+  locales: LocalesType
+}
+
+export interface GlobalModelState {
+  namespace: string
+  state: ModelState
+  effects: {
+    setLocales: any
+    setLang: Effect
+  }
+  reducers: {
+    setLangState: any
+    setHovered: any
+    setDrag: any
+    setEnter: any
+    setScale: any
+    setHelp: any
+    toggleShow: any
+  }
+}
+
+const GlobalModel: GlobalModelState = {
   namespace: 'global',
   state: {
     dragId: -1,
@@ -26,7 +69,8 @@ export default {
     lang: 'zh',
     locales: {
       HEADER_INFO: {
-        en: 'An online user interface to create awesome presentation efficiently',
+        en:
+          'An online user interface to create awesome presentation efficiently',
         zh: '一个快速和高效创建 PPT 的用户界面',
       },
       PLAY_HEAD: {
@@ -363,7 +407,8 @@ export default {
       },
       DIFFERENT: {
         zh: 'Gossip 制作幻灯片的方法和常规软件方式有所区别，',
-        en: 'The methods of Gossip to make slides is different from conventional software methods.',
+        en:
+          'The methods of Gossip to make slides is different from conventional software methods.',
       },
       LEARN_TIME: {
         zh: '建议用10到20分钟的学习，',
@@ -375,7 +420,8 @@ export default {
       },
       BEST: {
         zh: '为保证最佳体验：请使用 Chrome、Firefox 或 Safari 浏览器！',
-        en: 'To ensure the best experience: please use Chrome, Firefox or Safari browsers!',
+        en:
+          'To ensure the best experience: please use Chrome, Firefox or Safari browsers!',
       },
       NO_REMINDER: {
         zh: '不再提醒',
@@ -388,7 +434,13 @@ export default {
     },
   },
   effects: {
-    *setLocales(_: any, { select, put }: { select: (state: any) => any; put: (any: PutState) => void }) {
+    *setLocales(
+      _: any,
+      {
+        select,
+        put,
+      }: { select: (state: any) => any; put: (any: PutState) => void },
+    ) {
       const { locales, lang } = yield select((state: any) => state.global)
       yield put({
         type: 'slides/setLocales',
@@ -451,8 +503,12 @@ export default {
       ) {
         return state
       }
-      g.forEach(d => d !== key && state.show && (state.show[d] = state.show[d] ? 0 : 1))
+      g.forEach(
+        d => d !== key && state.show && (state.show[d] = state.show[d] ? 0 : 1),
+      )
       return state
     },
   },
 }
+
+export default GlobalModel
