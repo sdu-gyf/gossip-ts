@@ -1,21 +1,70 @@
-import React from 'react'
-import styles from './index.css'
+import classNames from './index.css'
+import Header from '@/components/Header'
+import useWindowSize from 'react-use/lib/useWindowSize'
+import { connect } from 'dva'
+import React, { useEffect } from 'react'
 
-export default function() {
+export default connect(
+  ({ global }: any) => ({
+    show: global.show,
+    locales: global.locales,
+  }),
+  {
+    setLocales: () => ({ type: 'global/setLocales' }),
+  },
+)(function({
+  show,
+  setLocales,
+  locales,
+}: {
+  show: any
+  setLocales: any
+  locales: any
+}) {
+  const { height, width } = useWindowSize()
+  const { structure, attr, vari } = show
+  const headerHeight = 60,
+    contentHeight = height - headerHeight,
+    total = structure + attr + vari,
+    totalHeight = contentHeight - (3 - total) * 45,
+    structureHeight = (totalHeight * structure) / total,
+    attrPanelHeight = (totalHeight * attr) / total,
+    varHeight = (totalHeight * vari) / total
+
+  const props = {
+    header: {
+      height: headerHeight,
+    },
+    sidebar: {
+      height: contentHeight,
+    },
+    mainContent: {
+      height: contentHeight,
+      width: width - 600,
+    },
+    structure: {
+      height: structureHeight,
+    },
+    attrPanel: {
+      height: attrPanelHeight,
+    },
+    Variables: {
+      height: varHeight,
+    },
+  }
+
+  useEffect(() => {
+    setLocales()
+  }, [setLocales])
+
   return (
-    <div className={styles.normal}>
-      <div className={styles.welcome} />
-      <ul className={styles.list}>
-        <li>
-          To get started, edit <code>src/pages/index.js</code> and save to
-          reload.
-        </li>
-        <li>
-          <a href="https://umijs.org/guide/getting-started.html">
-            Getting Started
-          </a>
-        </li>
-      </ul>
+    <div className={classNames.container}>
+      <Header {...props.header} />
+      <div className={classNames.content}>
+        <div className={classNames.left}>SidebarPanel</div>
+        <div className={classNames.main}>MainContent</div>
+        <div className={classNames.right}>Structure AttrPanel Variables</div>
+      </div>
     </div>
   )
-}
+})
