@@ -291,3 +291,5 @@ export type ComponentActionType = {
     key?: number | string
   }
 }
+
+declare module 'react-color'
