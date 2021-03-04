@@ -30,20 +30,20 @@ export default connect(
   name,
   closable = true,
 }: {
-  nodata: boolean
-  locales: LocalesType
-  lang: LanguageType
-  title: string
+  nodata?: boolean
+  locales?: LocalesType
+  lang?: LanguageType
+  title?: string
   popover?: any
-  children: any
-  height: number
+  children?: any
+  height?: number
   width?: number
   onSwitch?: any
-  nodataInfo: any
-  url: string
-  toggleShow: (key: any) => any
-  vis: any
-  name: string
+  nodataInfo?: any
+  url?: string
+  toggleShow?: (key: any) => any
+  vis?: any
+  name?: string
   closable?: boolean
 }) {
   const [show, setShow] = useState(false)

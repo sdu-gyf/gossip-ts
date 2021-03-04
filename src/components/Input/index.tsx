@@ -5,7 +5,7 @@ import { scaleLinear } from 'd3-scale'
 import { pairs } from 'd3-array'
 import React, { useRef, useEffect, useState, ReactChild } from 'react'
 import { connect } from 'dva'
-import { LanguageType, LocalesType } from '@/utils/types'
+import { LanguageType, LocalesType } from '../../utils/types'
 
 function Number({
   value,
@@ -197,10 +197,10 @@ function _MyImage({
   locales,
   lang,
 }: {
-  onChange: any
-  value: any
-  locales: LocalesType
-  lang: LanguageType
+  onChange?: any
+  value?: any
+  locales?: LocalesType
+  lang?: LanguageType
 }) {
   const [show, setShow] = useState(false)
   const [error, setError] = useState(false)
@@ -287,13 +287,13 @@ export default function({
   disabled,
 }: {
   type?: 'color' | 'radio' | 'switch' | 'array' | 'image' | 'number'
-  value: any
-  onChange: any
+  value?: any
+  onChange?: any
   range?: any
   list?: any
   yes?: any
   hasIcon?: any
-  disabled: any
+  disabled?: any
 }) {
   const styles = {
     color: {

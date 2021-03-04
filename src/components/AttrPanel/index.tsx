@@ -5,7 +5,7 @@ import { eachBefore } from '../../utils/tree'
 import Box from '../Box'
 import Input from '../Input'
 import React, { useState } from 'react'
-import { LanguageType, LocalesType } from '@/utils/types'
+import { LanguageType, LocalesType } from '../../utils/types'
 
 export default connect(
   ({ slides, global }: { slides: any; global: any }) => ({
