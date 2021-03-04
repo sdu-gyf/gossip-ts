@@ -38,20 +38,9 @@ export default connect(
   selectVar,
   locales,
   lang,
-}: {
-  height: number
-  components: any
-  selectedId: number | string
-  selectedComponentId: number | string
-  changeAttr: any
-  variables: any
-  deleteVarForCmp: any
-  selectVar: any
-  locales: LocalesType
-  lang: LanguageType
-}) {
+}: any) {
   const [dragover, setDragover] = useState('')
-  const slide = components.find((item: any) => item.id === selectedId)
+  const slide = components.find(item => item.id === selectedId)
   let selectedCmp
   selectedComponentId &&
     eachBefore(slide, node => {
@@ -61,37 +50,25 @@ export default connect(
     })
 
   const attrs = getAttrs(selectedCmp)
-  type InputByAttrType =
-    | 'fontSize'
-    | 'color'
-    | 'backgroundColor'
-    | 'flex'
-    | 'fontWeight'
-    | 'padding'
-    | 'textAlign'
-    | 'verticalAlign'
-    | 'span'
-    | 'displayMode'
-  type TypeType = 'number' | 'color' | 'radio' | 'switch' | 'array' | 'image'
   const inputByAttr = {
     fontSize: {
-      type: 'number' as TypeType,
+      type: 'number',
       name: locales.FONT_SIZE[lang],
       icon: 'font-size',
       range: [0, 500],
     },
     color: {
-      type: 'color' as TypeType,
+      type: 'color',
       name: locales.FONT_COLOR[lang],
       icon: 'font-colors',
     },
     backgroundColor: {
-      type: 'color' as TypeType,
+      type: 'color',
       name: locales.BG_COLOR[lang],
       icon: 'bg-colors',
     },
     flex: {
-      type: 'radio' as TypeType,
+      type: 'radio',
       name: locales.DIRECTION[lang],
       icon: 'menu',
       hasIcon: false,
@@ -107,19 +84,19 @@ export default connect(
       ],
     },
     fontWeight: {
-      type: 'switch' as TypeType,
+      type: 'switch',
       name: locales.BOLD[lang],
       icon: 'bold',
       yes: 'bold',
     },
     padding: {
-      type: 'number' as TypeType,
+      type: 'number',
       name: locales.PADDING[lang],
       icon: 'border',
       range: [0, 100],
     },
     textAlign: {
-      type: 'radio' as TypeType,
+      type: 'radio',
       name: locales.H_ALIGNMENT[lang],
       icon: 'profile',
       list: [
@@ -141,7 +118,7 @@ export default connect(
       ],
     },
     verticalAlign: {
-      type: 'radio' as TypeType,
+      type: 'radio',
       name: locales.V_ALIGNMENT[lang],
       icon: 'project',
       list: [
@@ -163,29 +140,29 @@ export default connect(
       ],
     },
     span: {
-      type: 'array' as TypeType,
+      type: 'array',
       name: locales.RATIO[lang],
       icon: 'layout',
     },
     displayMode: {
-      type: 'switch' as TypeType,
+      type: 'switch',
       name: locales.FULL_IMAGE[lang],
       icon: 'fullscreen',
       yes: 'scaleToFill',
     },
   }
 
-  function getAttrs(selectedCmp: any) {
+  function getAttrs(selectedCmp) {
     if (!selectedCmp || !selectedCmp.attrs) return []
-    return Object.keys(selectedCmp.attrs).reduce((arr: any, key) => {
+    return Object.keys(selectedCmp.attrs).reduce((arr, key) => {
       if (key === 'isTitle' || key === 'fontFamily') return arr
       let isVar = false
-      let varId: any = null
+      let varId = null
       let attrValue = selectedCmp.attrs[key]
       if (typeof attrValue === 'string' && attrValue[0] === '$') {
         isVar = true
         varId = parseInt(attrValue.slice(1))
-        const v = variables.find((item: any) => item.id === varId)
+        const v = variables.find(item => item.id === varId)
         attrValue = v.value
       }
       const obj = {
@@ -198,21 +175,20 @@ export default connect(
     }, [])
   }
 
-  function handleVarDrop(e: any, attr: any) {
+  function handleVarDrop(e, attr) {
     const [type, id] = e.dataTransfer.getData('attr').split('-')
     const mp = {
       color: ['color', 'backgroundColor'],
       number: ['fontSize', 'padding'],
     }
-    type MpType = 'color' | 'number'
-    const arr = mp[type as MpType]
+    const arr = mp[type]
     const index = arr.indexOf(attr)
     if (index === -1) alert(locales.TYPE_MISMATCH[lang])
     else changeAttr(`$${id}`, attr, selectedComponentId, selectedId)
     setDragover('')
   }
 
-  function scrollTo(id: any) {
+  function scrollTo(id) {
     const a = document.createElement('a')
     a.href = `#${id}`
     a.click()
@@ -228,15 +204,13 @@ export default connect(
       url="https://github.com/pearmini/gossip#revising-style-and-variable"
     >
       <ul className={classNames.container}>
-        {attrs.map((item: any, index: number) => {
-          const { icon, name, ...rest } = inputByAttr[
-            item.key as InputByAttrType
-          ]
+        {attrs.map((item, index) => {
+          const { icon, name, ...rest } = inputByAttr[item.key]
           return (
             <li
               key={index}
               className={classNames.item}
-              style={{ background: '#4091f7' }}
+              style={{ background: item.key === dragover && '#4091f7' }}
               onDragEnter={() => setDragover(item.key)}
               onDragOver={e => {
                 if (item.key !== dragover) setDragover(item.key)
@@ -249,7 +223,7 @@ export default connect(
               <span className={classNames.name}>{name}</span>
               <Input
                 value={item.attrValue}
-                onChange={(value: any) =>
+                onChange={value =>
                   changeAttr(value, item.key, selectedComponentId, selectedId)
                 }
                 disabled={item.isVar}

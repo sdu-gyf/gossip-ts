@@ -1,13 +1,3 @@
-import {
-  ActionType,
-  PutState,
-  StateType,
-  KeyType,
-  LanguageType,
-  LocalesType,
-} from '@/utils/types'
-import { Effect } from 'dva'
-
 function getHelp() {
   try {
     const help = localStorage.getItem('help')
@@ -17,41 +7,7 @@ function getHelp() {
   }
 }
 
-export interface ModelState {
-  dragId: number
-  enterId: number
-  hoveredId: number
-  scale: number
-  help: any
-  show: {
-    idea: number
-    structure: number
-    attr: number
-    variable: number
-  }
-  lang: LanguageType
-  locales: LocalesType
-}
-
-export interface GlobalModelState {
-  namespace: string
-  state: ModelState
-  effects: {
-    setLocales: any
-    setLang: Effect
-  }
-  reducers: {
-    setLangState: any
-    setHovered: any
-    setDrag: any
-    setEnter: any
-    setScale: any
-    setHelp: any
-    toggleShow: any
-  }
-}
-
-const GlobalModel: GlobalModelState = {
+export default {
   namespace: 'global',
   state: {
     dragId: -1,
@@ -63,9 +19,8 @@ const GlobalModel: GlobalModelState = {
       idea: 1,
       structure: 1,
       attr: 1,
-      variable: 1,
+      vari: 1,
     },
-    // zh or en
     lang: 'zh',
     locales: {
       HEADER_INFO: {
@@ -115,10 +70,10 @@ const GlobalModel: GlobalModelState = {
       },
       LANG_EN: {
         en: 'English',
-        zh: '英文',
+        zh: 'English',
       },
       LANG_ZN: {
-        en: 'Chinese',
+        en: '中文',
         zh: '中文',
       },
       OUTLINE: {
@@ -434,14 +389,8 @@ const GlobalModel: GlobalModelState = {
     },
   },
   effects: {
-    *setLocales(
-      _: any,
-      {
-        select,
-        put,
-      }: { select: (state: any) => any; put: (any: PutState) => void },
-    ) {
-      const { locales, lang } = yield select((state: any) => state.global)
+    *setLocales(_, { select, put }) {
+      const { locales, lang } = yield select(state => state.global)
       yield put({
         type: 'slides/setLocales',
         payload: {
@@ -450,7 +399,7 @@ const GlobalModel: GlobalModelState = {
         },
       })
     },
-    *setLang(action: any, { put }: { put: (any: PutState) => void }) {
+    *setLang(action, { put }) {
       const { lang } = action.payload
       yield put({
         type: 'setLangState',
@@ -467,48 +416,37 @@ const GlobalModel: GlobalModelState = {
     },
   },
   reducers: {
-    setLangState(state: StateType, action: ActionType) {
+    setLangState(state, action) {
       const { lang } = action.payload
       return { ...state, lang }
     },
-    setHovered(state: StateType, action: ActionType) {
-      const { hoveredId } = action.payload
-      return { ...state, hoveredId }
+    setHovered(state, action) {
+      const { id } = action.payload
+      return { ...state, hoveredId: id }
     },
-    setDrag(state: StateType, action: ActionType) {
-      const { dragId } = action.payload
-      return { ...state, dragId }
+    setDrag(state, action) {
+      const { id } = action.payload
+      return { ...state, dragId: id }
     },
-    setEnter(state: StateType, action: ActionType) {
-      const { enterId } = action.payload
-      return { ...state, enterId }
+    setEnter(state, action) {
+      const { id } = action.payload
+      return { ...state, enterId: id }
     },
-    setScale(state: StateType, action: ActionType) {
+    setScale(state, action) {
       const { scale } = action.payload
       return { ...state, scale }
     },
-    setHelp(state: StateType, action: ActionType) {
+    setHelp(state, action) {
       localStorage.setItem('help', 'true')
       return { ...state, help: true }
     },
-    toggleShow(state: StateType, action: ActionType) {
+    toggleShow(state, action) {
       const { key } = action.payload
-      state.show && (state.show[key!] = state.show[key!] ? 0 : 1)
-      const g: KeyType[] = ['variable', 'attr', 'structure']
-      if (
-        g.indexOf(key!) === -1 ||
-        g.some(d => {
-          state.show && state.show[d]
-        })
-      ) {
-        return state
-      }
-      g.forEach(
-        d => d !== key && state.show && (state.show[d] = state.show[d] ? 0 : 1),
-      )
+      state.show[key] = state.show[key] ? 0 : 1
+      const g = ['vari', 'attr', 'structure']
+      if (g.indexOf(key) === -1 || g.some(d => state.show[d])) return state
+      g.forEach(d => d !== key && (state.show[d] = state.show[d] ? 0 : 1))
       return state
     },
   },
 }
-
-export default GlobalModel
