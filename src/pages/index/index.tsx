@@ -3,7 +3,8 @@ import Header from '@/components/Header'
 import useWindowSize from 'react-use/lib/useWindowSize'
 import { connect } from 'dva'
 import React, { useEffect } from 'react'
-import SidebarPanel from '../../components/SlidebarPanel'
+import SidebarPanel from '../../components/SidebarPanel'
+import MainContent from '../../components/MainContent'
 
 export default connect(
   ({ global }: any) => ({
@@ -65,7 +66,9 @@ export default connect(
         <div className={classNames.left}>
           <SidebarPanel {...props.sidebar} />
         </div>
-        <div className={classNames.main}>MainContent</div>
+        <div className={classNames.main}>
+          <MainContent {...props.mainContent} />
+        </div>
         <div className={classNames.right}>Structure AttrPanel Variables</div>
       </div>
     </div>
