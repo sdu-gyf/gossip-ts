@@ -5,6 +5,9 @@ import { connect } from 'dva'
 import React, { useEffect } from 'react'
 import SidebarPanel from '../../components/SidebarPanel'
 import MainContent from '../../components/MainContent'
+import Structure from '../../components/Structure'
+import AttrPanel from '../../components/AttrPanel'
+import Variables from '../../components/Variables'
 
 export default connect(
   ({ global }: any) => ({
@@ -69,7 +72,11 @@ export default connect(
         <div className={classNames.main}>
           <MainContent {...props.mainContent} />
         </div>
-        <div className={classNames.right}>Structure AttrPanel Variables</div>
+        <div className={classNames.right}>
+          <Structure {...props.structure} />
+          <AttrPanel {...props.attrPanel} />
+          <Variables {...props.Variables} />
+        </div>
       </div>
     </div>
   )
