@@ -33,8 +33,9 @@ jobs:
       # action命令，install && test
       - name: npm install && build
         run: |
-          npm install
-          npm run build
+          npm install yarn
+          yarn
+          yarn build
           tar -zcvf ./dist.tar.gz ./dist
 
       - name: Set SSH Environment
