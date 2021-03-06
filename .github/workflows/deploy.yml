@@ -2,13 +2,13 @@
 
 name: CI
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -24,21 +24,18 @@ jobs:
     steps:
       # action命令，切换分支获取源码
       - name: Checkout
-          # 使用action库  actions/checkout获取源码
-          uses: actions/checkout@master
+        uses: actions/checkout@master
       # action命令，安装Node10
       - name: use Node.js 14
-          # 使用action库  actions/setup-node安装node
-          uses: actions/setup-node@v1
-          with:
-              node-version: 14.15.5
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.15.5
       # action命令，install && test
       - name: npm install && build
-          # 运行的命令或者 action
-          run: |
-              npm install
-              npm run build
-              tar -zcvf ./dist.tar.gz ./dist
+        run: |
+          npm install
+          npm run build
+          tar -zcvf ./dist.tar.gz ./dist
 
       - name: Set SSH Environment
         run: |
@@ -82,4 +79,3 @@ jobs:
           script: |
             cd /www/wwwroot/${{secrets.PATH}}
             tar -zxvf dist.tar.gz -C ./
-            
