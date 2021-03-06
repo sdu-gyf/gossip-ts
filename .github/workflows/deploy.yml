@@ -1,0 +1,85 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # action命令，切换分支获取源码
+      - name: Checkout
+          # 使用action库  actions/checkout获取源码
+          uses: actions/checkout@master
+      # action命令，安装Node10
+      - name: use Node.js 14
+          # 使用action库  actions/setup-node安装node
+          uses: actions/setup-node@v1
+          with:
+              node-version: 14.15.5
+      # action命令，install && test
+      - name: npm install && build
+          # 运行的命令或者 action
+          run: |
+              npm install
+              npm run build
+              tar -zcvf ./dist.tar.gz ./dist
+
+      - name: Set SSH Environment
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.ID_RSA }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.ID_RSA_PUB }}" > ~/.ssh/id_rsa.pub
+          cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+          chmod 600 ~/.ssh/id_rsa
+          chmod 700 ~/.ssh && chmod 700 ~/.ssh/*
+          ls -l ~/.ssh/
+
+      - name: clean up
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.IP }}
+          username: ${{ secrets.ID }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /www/wwwroot
+            rm -rf ${{secrets.PATH}}
+            mkdir ${{secrets.PATH}}
+
+      - name: scp
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: ./dist.tar.gz
+          remote: /www/wwwroot/${{secrets.PATH}}/dist.tar.gz
+          host: ${{ secrets.IP }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+
+      - name: unzip dist
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.IP }}
+          username: ${{ secrets.ID }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /www/wwwroot/${{secrets.PATH}}
+            tar -zxvf dist.tar.gz -C ./
+            
