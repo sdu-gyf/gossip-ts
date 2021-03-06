@@ -33,6 +33,7 @@ jobs:
       # action命令，install && test
       - name: npm install && build
         run: |
+          npm install -g umi@^2.9.0
           npm install
           npm run build
           tar -zcvf ./dist.tar.gz ./dist
